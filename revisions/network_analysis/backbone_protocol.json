@@ -1,0 +1,46 @@
+{
+  "purpose": "Test whether the ranking comparison differs when connectivity is defined by locally important trade links rather than every nonzero trade link. This is a complementary topology-sensitivity analysis, not a replacement for the original full-network result.",
+  "source": "The original 2020 Energy-Minerals 112-node case, unchanged scores and trade values. Report Combined, Energy and Minerals; keep every original node including isolates.",
+  "backbone_method": "Directed disparity filter from Serrano, Boguna and Vespignani (2009). For u->v, use outgoing share p_out=w_uv/s_out(u) and incoming share p_in=w_uv/s_in(v). For degree k>1, local tail probability is (1-p)^(k-1). Keep an edge if its outgoing OR incoming probability is below the fixed filter significance level. A degree-one endpoint alone does not force retention; the other endpoint's criterion applies. Retain an edge if both relevant degrees equal one. Record any degree-one edge cases.",
+  "reference": {
+    "doi": "10.1073/pnas.0808904106",
+    "article": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2672499/",
+    "full_text_with_directed_appendix": "https://arxiv.org/pdf/0904.2389",
+    "directed_rule": "Supporting Information: The disparity filter for directed networks, equations 10 and 15 and directed OR rule."
+  },
+  "main_filter_level": 0.05,
+  "sensitivity_filter_levels": [
+    0.01,
+    0.1
+  ],
+  "selection_note": "These three levels were fixed before computing any backbone-removal outcomes, following the levels illustrated in the method paper. They are not model alpha values and will not be optimized for Affective DomiRank performance. All three results will be reported.",
+  "primary_rank_family": "Existing case rankings: reuse exactly the original four removal orders, on each scope, without changing any scores. The question is how those previously identified nodes affect the trade backbone.",
+  "secondary_rank_family": "Recomputed backbone rankings: recompute BOTH DomiRank methods on the same backbone with alpha=0.01,beta=0.5,gamma=0.1,theta=1 and the original scoring-stage sentiment forcing. Recompute Total degree and PageRank on the backbone. This separate analysis tests algorithms on the filtered graph, not the original rankings.",
+  "removal": "Fixed initial ranking within each condition; remove one node and its incident backbone edges at each step. Do not recalculate the disparity filter or ranking after deletions.",
+  "primary_metric": "Largest weak component / initial largest weak component, full-curve AUC across removed-node fraction 0..1, lower is faster dismantling. Also store raw counts and component/original node count to expose initial graph differences.",
+  "secondary_metric": "Largest strongly connected component with the same reporting, initial component sizes, after10/after20, removal counts to half/tenth of initial component.",
+  "trade_information_retained": "Record total backbone edges, fraction of original trade value retained, active nodes, isolates, weak/strong component sizes at each level. Retained trade value is descriptive, not an outcome used for choosing filter levels.",
+  "reference_methods": [
+    "Affective DomiRank",
+    "Traditional DomiRank",
+    "Total degree",
+    "PageRank",
+    "Random removal"
+  ],
+  "random_reference": {
+    "permutations": 1000,
+    "seed": 20260924,
+    "note": "Common random deletion orders across filter levels and ranking families for each scope. Pointwise 2.5th-97.5th percentiles are order variability, not inferential confidence intervals."
+  },
+  "tie_sensitivity": {
+    "permutations": 200,
+    "seed": 930,
+    "methods": [
+      "Affective DomiRank",
+      "Traditional DomiRank"
+    ],
+    "rule": "Randomize only within scores tied at 12 decimals after min-max scaling, retaining score-group order."
+  },
+  "verification": "Retained edge sets nested with filter level, positive edge weights, scale invariance and transpose symmetry of filter, all deterministic curves checked by independent Boolean transitive closure, normalized endpoints/monotonicity, stable linear solves/residuals for recomputed scores. All original input-file and prior-result hashes unchanged.",
+  "training_runs": 0
+}

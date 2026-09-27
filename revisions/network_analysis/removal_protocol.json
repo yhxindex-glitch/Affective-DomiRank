@@ -1,0 +1,33 @@
+{
+  "question": "How effectively do the existing rankings dismantle the original 2020 Energy and Minerals subnetwork?",
+  "population": "Exactly the original case-study population: GraphML nodes with industry attribute Energy or Minerals; expect 112 nodes and 5075 directed edges.",
+  "main_methods": [
+    "Affective DomiRank",
+    "Traditional DomiRank"
+  ],
+  "reference_methods": [
+    "Total degree",
+    "PageRank",
+    "Random removal"
+  ],
+  "scores": "Reuse original DomiRank scores; degree and PageRank computed on the same binary induced graph. PageRank damping 0.85, uniform teleportation and dangling distribution, power-iteration L1 tolerance 1e-12.",
+  "primary_order": "Fixed descending pre-removal scores. Reproduce the existing case script's min-max-scaled DomiRank sorting and GraphML insertion order for ties. No score or parameter updates after removal.",
+  "removal": "Remove one node and all its incident edges at each step, from zero through all nodes. No edge-thresholding, reweighting or cascade rule.",
+  "primary_metric": "Largest weakly connected component, retaining an edge irrespective of direction for connectivity. Report raw counts, fraction of original node count, and fraction of initial largest-component size.",
+  "secondary_metric": "Largest strongly connected component, requiring directed mutual reachability; same normalizations.",
+  "summaries": "Normalized trapezoidal area under each full removal curve; component counts after 10 and 20 removals; removals required to reach <=50% and <=10% of initial component size. Smaller values indicate faster dismantling.",
+  "random_reference": {
+    "permutations": 1000,
+    "seed": 20260922,
+    "display": "Mean and pointwise 2.5th–97.5th percentiles; random-order variability, not a confidence interval for model performance."
+  },
+  "tie_sensitivity": {
+    "permutations": 200,
+    "seed": 928,
+    "rule": "Randomly permute nodes within score groups tied at 12 decimal places after min-max scaling; retain score-group ordering."
+  },
+  "sector_checks": "Also report Energy and Minerals separately using the same original DomiRank scores restricted to each sector. Compute reference degree/PageRank on each evaluated graph. These prespecified secondary checks distinguish within-sector fragmentation from the allocation of removals between disconnected sectors.",
+  "verification": "Reproduce case-study node/edge counts, saved top10 scores and Affective order, and all reported overlap counts. Verify saved ordinal ranks against tied-score rank intervals, recording order differences within ties. Independently verify deterministic component curves using Boolean transitive closure. Check monotonicity, endpoint counts, valid removal permutations, and unchanged input-file hashes.",
+  "training_runs": 0,
+  "method_reference": "https://www.nature.com/articles/s41467-023-44257-0"
+}
